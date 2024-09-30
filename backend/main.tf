@@ -1,3 +1,25 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.63.0"
+    }
+
+  }
+
+/*  backend "s3" {
+    bucket = "ctfd-terraform-state-backend"
+    key = "terraform.tfstate"
+    region = "eu-west-1"
+    dynamodb_table = "terraform_tfstate"
+  }*/
+}
+
+provider "aws" {
+  region = "eu-west-1"
+}
+
+
 resource "aws_s3_bucket" "bucket" {
   bucket = "ctfd-terraform-state-backend"
   object_lock_enabled = true
@@ -19,3 +41,4 @@ resource "aws_dynamodb_table" "terraform-lock" {
     Name = "DynamoDB Terraform State Lock Table"
   }
 }
+

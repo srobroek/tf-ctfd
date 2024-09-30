@@ -6,6 +6,10 @@ sudo yum install -y yum-utils
 sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
 sudo yum -y install terraform
 if [[ "$STACK_OPERATION" == "create" || "$STACK_OPERATION" == "update" ]]; then
+
+  (cd backend; terraform init; terraform apply -y)
+
+
   terraform init
   terraform apply -y
 

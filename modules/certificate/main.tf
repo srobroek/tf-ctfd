@@ -3,17 +3,10 @@ data "aws_route53_zone" "zone"{
   zone_id = var.domain_zone_id
 }
 
-provider "aws" {
-  region = "eu-west-1"
-}
 
-provider "aws" {
-  alias = "acm"
-  region = "us-east-1"
-}
 
 resource "aws_acm_certificate" "certificate" {
-  provider = aws.acm
+  provider = aws
   domain_name       = var.domain_name
   subject_alternative_names = [var.domain_name]
   validation_method = "DNS"
@@ -24,7 +17,7 @@ resource "aws_acm_certificate" "certificate" {
 }
 
 resource "aws_route53_record" "cert_validation_record" {
-  provider = aws.acm
+  provider = aws
   for_each = {
     for dvo in aws_acm_certificate.certificate.domain_validation_options: dvo.domain_name => {
       name = dvo.resource_record_name
@@ -41,7 +34,7 @@ resource "aws_route53_record" "cert_validation_record" {
 }
 
 resource "aws_acm_certificate_validation" "cert_validation" {
-  provider = aws.acm
+  provider = aws
   timeouts {
     create = "5m"
   }
